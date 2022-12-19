@@ -1,5 +1,6 @@
+const db = require('./db/connection')
 const inquirer = require('inquirer')
-const consoleTable = require('console.table')
+const cTable = require('console.table')
 
 
 // SETUP kickoff prompt asking user what they want to do
@@ -62,18 +63,45 @@ const startPrompt = () => {
 // function to get departments info
 const viewAllDepartments = () => {
     // SQL query to get all departments
+    const sql = `SELECT * FROM departments`;
+    db.query(sql, (err, res) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.table(res);
+        startPrompt();
+    });
 }
 
 // "view all roles"
 // function to get roles info
 const viewAllRoles = () => {
     // SQL query to get all roles
+    const sql = `SELECT * FROM roles`;
+    db.query(sql, (err, res) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.table(res);
+        startPrompt();
+    });
 }
 
 // "view all employees"
 // function to get employee info
 const viewAllEmployees = () => {
     // SQL query to get all employees
+    const sql = `SELECT * FROM employee`;
+    db.query(sql, (err, res) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.table(res);
+        startPrompt();
+    });
 }
 
 // "add a department"
@@ -94,8 +122,16 @@ const addDepartment = () => {
     })
         .then((answer) => {
             // SQL query to add new department
+            db.query(`INSERT INTO departments (name) VALUES (?)`, answer.addDepartment, (err, res) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log('New department added.');
+                startPrompt();
+            })
         })
-}
+};
 
 // "add a role"
 // function to add a new role
@@ -143,8 +179,16 @@ const addRole = () => {
     ])
         .then((answer) => {
             // SQL query to add new role
+            db.query(`INSERT INTO roles (title, salary, department_id) VALUES (?, ?, ?)`, [answer.addRole, answer.addSalary, answer.addDept], (err, res) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log('New role added.');
+                startPrompt();
+            })
         })
-}
+};
 
 // "add an employee"
 // function to add a new employee
@@ -205,8 +249,16 @@ const addEmployee = () => {
     ])
         .then((answer) => {
             // SQL query to add new employee
+            db.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [answer.addFirstName, answer.addLastName, answer.addRole, answer.addManager], (err, res) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log('New employee added.');
+                startPrompt();
+            })
         })
-}
+};
 
 // "update an employee role"
 // function to add a new role
@@ -242,7 +294,15 @@ const updateEmployeeRole = () => {
     ])
         .then((answer) => {
             // SQL query to update employee role
+            db.query(`UPDATE employee SET role_id = ? WHERE id = ?`, [answer.updateRole, answer.updateEmployee], (err, res) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log('Employee role updated.');
+                startPrompt();
+            })
         })
-}
+};
 
 startPrompt();
