@@ -1,7 +1,6 @@
-const db = require('./db/connection')
-const inquirer = require('inquirer')
-const cTable = require('console.table')
-
+const db = require('./db/connection');
+const inquirer = require('inquirer');
+const cTable = require('console.table');
 
 // SETUP kickoff prompt asking user what they want to do
 // 
@@ -12,6 +11,7 @@ const cTable = require('console.table')
 // add a role -- name, salary, dept
 // add an employee -- first name, last name, role, manager
 // update an employee role - select employee, new role
+
 
 const startPrompt = () => {
     inquirer.prompt({
@@ -53,7 +53,9 @@ const startPrompt = () => {
                     updateEmployeeRole();
                     break;
                 case 'Exit':
-                    connection.end();
+                    function exit() {
+                        prompt.ui.close();
+                    }
                     break;
             }
         })
@@ -72,7 +74,7 @@ const viewAllDepartments = () => {
         console.table(res);
         startPrompt();
     });
-}
+};
 
 // "view all roles"
 // function to get roles info
@@ -87,7 +89,7 @@ const viewAllRoles = () => {
         console.table(res);
         startPrompt();
     });
-}
+};
 
 // "view all employees"
 // function to get employee info
@@ -102,7 +104,7 @@ const viewAllEmployees = () => {
         console.table(res);
         startPrompt();
     });
-}
+};
 
 // "add a department"
 // function to add a new dept
